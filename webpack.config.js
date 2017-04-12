@@ -21,15 +21,15 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 
 /**
  * Export the build configuration.
  */
 module.exports = function () {
+  // TODO maybe provide via config or cross env?
+  const baseurl = '/';
   // Get the build environment.
   const DEV = process.env.NODE_ENV === 'development';
-  const WEB = process.env.TARGET === 'web';
   // Build sass loaders.
   function getSassLoaders(modules) {
     return []
@@ -84,19 +84,15 @@ module.exports = function () {
   // Build and export the build configuration.
   return {
     // https://webpack.js.org/configuration/target
-    target: WEB ? 'web' : 'node',
-    node: {
-      __dirname: false,
-      __filename: false,
-    },
+    target: 'web',
     // https://webpack.js.org/configuration/entry-context
     entry: {
-      main: path.resolve(__dirname, WEB ? './src/index.client.js' : './src/server.js')
+      main: path.resolve(__dirname, './src/index.js')
     },
     // https://webpack.js.org/configuration/output
     output: {
-      filename: WEB ? '[name].[hash].js' : '[name].js',
-      path: path.resolve(__dirname, WEB ? './dist/client' : './dist/server'),
+      filename: '[name].[hash].js',
+      path: path.resolve(__dirname, './dist/client'),
       publicPath: '' // todo
     },
     // https://webpack.js.org/configuration/resolve
@@ -146,7 +142,7 @@ module.exports = function () {
     // https://webpack.js.org/configuration/plugins
     plugins: [
       // https://github.com/johnagan/clean-webpack-plugin
-      new CleanWebpackPlugin(WEB ? ['dist/client'] : ['dist/server'], __dirname),
+      new CleanWebpackPlugin(['dist/client'], __dirname),
       // https://github.com/kevlened/copy-webpack-plugin
       new CopyWebpackPlugin([
         {from: 'public'}
@@ -160,21 +156,18 @@ module.exports = function () {
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: JSON.stringify(DEV ? 'development' : 'production'),
-          WEB: JSON.stringify(WEB)
+          BASE_URL: JSON.stringify(baseurl)
         }
-      })
-    ].concat(WEB ? [
+      }),
       // https://github.com/ampedandwired/html-webpack-plugin
-      new HtmlWebpackPlugin(Object.assign({
+      new HtmlWebpackPlugin({
         template: path.resolve(__dirname, './src/index.ejs'),
         inject: false,
-        baseurl: '/',
+        baseurl: baseurl,
         manifest: 'manifest.json',
         themeColor: '#333'
-      }, !DEV ? {
-        serviceWorker: 'service-worker.js'
-      } : {}))
-    ] : [])
+      })
+    ]
       .concat(DEV ? [
         // prints more readable module names in the browser console on HMR updates
         new webpack.NamedModulesPlugin()
@@ -199,21 +192,6 @@ module.exports = function () {
           },
           sourceMap: true
         })
-      ] : [])
-      .concat(!DEV && WEB ? [
-        new SWPrecacheWebpackPlugin(
-          {
-            cacheId: 'my-project-name', // TODO
-            filename: 'service-worker.js',
-            stripPrefix: path.join(__dirname, 'dist/client').replace(/\\/g, "/"),
-            maximumFileSizeToCacheInBytes: 4194304,
-            minify: false,
-            runtimeCaching: [{
-              handler: 'cacheFirst',
-              urlPattern: /[.]mp3$/,
-            }],
-          }
-        )
       ] : []),
     // https://webpack.js.org/configuration/devtool
     devtool: DEV ? 'cheap-module-eval-source-map' : 'source-map',
@@ -226,12 +204,10 @@ module.exports = function () {
     // https://webpack.js.org/configuration/dev-server
     devServer: {
       port: process.env.PORT || 8080,
-      host: 'frae-local.fraedom-dev.com',
+      host: 'localhost',
       publicPath: '/',
       contentBase: './src',
-      historyApiFallback: true,
-      key: fs.readFileSync(path.resolve(__dirname, './certificates/localhost.key')),
-      cert: fs.readFileSync(path.resolve(__dirname, './certificates/localhost.crt'))
+      historyApiFallback: true
     }
   };
 };

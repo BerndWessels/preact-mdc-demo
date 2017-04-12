@@ -1,17 +1,15 @@
 {
-  "name": "preact-redux-isomorphic",
+  "name": "preact-mdc-demo",
   "version": "0.2.0",
-  "description": "",
+  "description": "Examples on how to use preact-mdc material design components.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:client": "cross-env NODE_ENV=production BABEL_ENV=production TARGET=web webpack",
-    "build:server": "cross-env NODE_ENV=production BABEL_ENV=production TARGET=node webpack",
-    "build": "npm run build:client & npm run build:server",
-    "dev": "cross-env NODE_ENV=development TARGET=web webpack-dev-server --inline --hot --progress --https"
+    "build": "cross-env NODE_ENV=production BABEL_ENV=production webpack",
+    "dev": "cross-env NODE_ENV=development TARGET=web webpack-dev-server --inline --hot --progress"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Bernd Wessels",
+  "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.0.0",
     "babel-core": "^6.0.0",
@@ -34,28 +32,18 @@
     "resolve-url-loader": "^2.0.0",
     "sass-loader": "^6.0.0",
     "style-loader": "^0.16.0",
-    "sw-precache-webpack-plugin": "^0.9.0",
     "webpack": "^2.0.0",
     "webpack-dev-server": "^2.0.0"
   },
   "dependencies": {
     "classnames": "^2.0.0",
-    "history": "^4.0.0",
     "material-components-web": "^0.8.0",
     "material-design-icons": "^3.0.0",
     "preact": "^8.0.0",
     "preact-compat": "^3.0.0",
     "preact-mdc": "^0.1.0",
-    "preact-redux": "^2.0.0",
-    "ramda": "^0.23.0",
-    "react-intl": "^2.0.0",
-    "react-router": "^4.0.0",
-    "react-router-redux": "^5.0.0-alpha.4",
-    "redux": "^3.0.0",
-    "redux-observable": "^0.14.0",
-    "roboto-fontface": "^0.7.0",
-    "rxjs": "^5.0.0",
-    "undom": "^0.3.0",
-    "xhr2": "^0.1.0"
+    "react-router": "4.0.0",
+    "react-router-dom": "4.0.0",
+    "roboto-fontface": "^0.7.0"
   }
 }

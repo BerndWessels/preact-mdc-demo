@@ -11,9 +11,7 @@
  * Import dependencies.
  */
 import {h, Component} from 'preact';
-import {connect} from 'preact-redux';
-import {push} from 'react-router-redux';
-import {Route} from 'react-router';
+import {Route} from 'react-router-dom';
 
 /**
  * Import local dependencies.
@@ -29,7 +27,6 @@ import DemoSnackbar from './components/demo-snackbar/component';
 import DemoSwitch from './components/demo-switch/component';
 import DemoTextField from './components/demo-text-field/component';
 import DemoTheme from './components/demo-theme/component';
-import {fetchGraphQLQueryCreator} from './actions';
 
 /**
  * Import styles.
@@ -38,30 +35,11 @@ import 'roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss';
 import styles from './styles';
 
 /**
- * Create the component.
+ * Export the component.
  */
-class App extends Component {
+export default class App extends Component {
 
-  /**
-   * Initialize local component state.
-   */
-  constructor() {
-    super();
-    this.state = {};
-  }
-
-  // Called on server and client.
-  componentWillMount = () => {
-    // Load data if necessary.
-    setTimeout(() => {
-      if (!this.props.alreadyLoaded) {
-        this.props.onReady();
-      }
-    });
-  };
-
-  // Render the component.
-  render({onNavigate, aTest}, {drawerCollapsed}) {
+  render(props, state, context) {
     return (
       <div class={styles.root}>
         <Route exact path="/" component={Demo}/>
@@ -79,35 +57,3 @@ class App extends Component {
     );
   }
 }
-
-/**
- * Map state to component properties.
- */
-const mapStateToProps = (state) => {
-  return {
-    aTest: state.a.test,
-    alreadyLoaded: state.a.hasOwnProperty('report')
-  }
-};
-
-/**
- * Map actions to component properties.
- */
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onNavigate: (path) => dispatch(push(path)),
-    onReady: () => dispatch(fetchGraphQLQueryCreator({query: `{ report(id: 4711) { name } }`})
-    )
-  }
-};
-
-/**
- * Export the container component.
- */
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  null, {
-    pure: false
-  }
-)(App);

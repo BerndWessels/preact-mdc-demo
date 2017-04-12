@@ -12,8 +12,7 @@
  */
 import {h, Component} from 'preact';
 import classnames from 'classnames/dedupe';
-import {connect} from 'preact-redux';
-import {push} from 'react-router-redux';
+import {Link} from 'react-router-dom';
 
 /**
  * Import local dependencies.
@@ -30,56 +29,26 @@ import styles from './styles';
 /**
  * Create the component.
  */
-class Demo extends Component {
+export default class Demo extends Component {
 
-  render({onNavigate}, state) {
+  render(props, state, context) {
     let classes = classnames(styles.root, 'mdc-typography');
     return (
       <div class={classes}>
         <h1>Preact Material Design Components Web (preact-mdc)</h1>
         <List links>
-          <ListItem link href="/button" onClick={(e) => onNavigate(e, '/button')}>Button Demo</ListItem>
-          <ListItem link href="/card" onClick={(e) => onNavigate(e, '/card')}>Card Demo</ListItem>
-          <ListItem link href="/checkbox" onClick={(e) => onNavigate(e, '/checkbox')}>Checkbox / Radio Demo</ListItem>
-          <ListItem link href="/drawer" onClick={(e) => onNavigate(e, '/drawer')}>Drawer / Toolbar Demo</ListItem>
-          <ListItem link href="/icon-toggle" onClick={(e) => onNavigate(e, '/icon-toggle')}>Icon Toggle Demo</ListItem>
-          <ListItem link href="/list" onClick={(e) => onNavigate(e, '/list')}>List Demo</ListItem>
-          <ListItem link href="/snackbar" onClick={(e) => onNavigate(e, '/snackbar')}>Snackbar Demo</ListItem>
-          <ListItem link href="/switch" onClick={(e) => onNavigate(e, '/switch')}>Switch Demo</ListItem>
-          <ListItem link href="/text-field" onClick={(e) => onNavigate(e, '/text-field')}>Text field Demo</ListItem>
-          <ListItem link href="/theme" onClick={(e) => onNavigate(e, '/theme')}>Theme Demo</ListItem>
+          <ListItem><Link to="/button">Button Demo</Link></ListItem>
+          <ListItem><Link to="/card">Card Demo</Link></ListItem>
+          <ListItem><Link to="/checkbox">Checkbox / Radio Demo</Link></ListItem>
+          <ListItem><Link to="/drawer">Drawer / Toolbar Demo</Link></ListItem>
+          <ListItem><Link to="/icon-toggle">Icon Toggle Demo</Link></ListItem>
+          <ListItem><Link to="/list">List Demo</Link></ListItem>
+          <ListItem><Link to="/snackbar">Snackbar Demo</Link></ListItem>
+          <ListItem><Link to="/switch">Switch Demo</Link></ListItem>
+          <ListItem><Link to="/text-field">Text field Demo</Link></ListItem>
+          <ListItem><Link to="/theme">Theme Demo</Link></ListItem>
         </List>
       </div>
     );
   }
 }
-
-/**
- * Map state to component properties.
- */
-const mapStateToProps = (state) => {
-  return {}
-};
-
-/**
- * Map actions to component properties.
- */
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onNavigate: (e, path) => {
-      e.preventDefault();
-      dispatch(push(path));
-    }
-  };
-};
-
-/**
- * Export the container component.
- */
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  null, {
-    pure: false
-  }
-)(Demo);
